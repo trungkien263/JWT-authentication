@@ -18,10 +18,13 @@ const authController = {
         password: hashed,
       });
 
+      console.log("newUser", newUser);
+
       //Save the new user to the database
       const user = await newUser.save();
-      res.status(200).json(user);
+      return res.status(200).json(user);
     } catch (error) {
+      console.log("error register", error);
       res.status(500).json(error);
     }
   },
@@ -52,6 +55,7 @@ const authController = {
 
   //Login
   loginUser: async (req, res) => {
+    // console.log("req", req);
     try {
       const user = await User.findOne({
         username: req.body.username,
@@ -60,6 +64,8 @@ const authController = {
         res.status(404).json("Wrong username!");
       }
 
+      console.log("user", user);
+
       const validPassword = await bcrypt.compare(
         req.body.password,
         user.password
@@ -67,6 +73,8 @@ const authController = {
       if (!validPassword) {
         res.status(404).json("Wrong password!");
       }
+
+      console.log("validPassword", validPassword);
 
       if (user && validPassword) {
         // Generate access token
@@ -83,6 +91,8 @@ const authController = {
         res.status(200).json({ ...others, accessToken });
       }
     } catch (error) {
+      console.log("error login", error);
+
       res.status(500).json(error);
     }
   },

@@ -14,9 +14,14 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGODB_URL, () => {
-  console.log("connection established!!!");
-});
+mongoose
+  .connect(process.env.MONGODB_URL)
+  .then(() => {
+    console.log("Connection established");
+  })
+  .catch((err) => {
+    console.log("error connecting to Mongo", err);
+  });
 
 //Routes
 app.use("/api/v1/auth", authRoute);
